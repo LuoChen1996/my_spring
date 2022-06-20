@@ -1,0 +1,90 @@
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:schemaLocation="
+            http://www.springframework.org/schema/beans
+            http://www.springframework.org/schema/beans/spring-beans.xsd"
+       default-lazy-init="false">
+
+    <!-- 
+        下面一个为最基础的xml配置bean
+        id：bean的唯一标识名，必须以字母开头，不能有特殊字符
+        class：bean实例所在的类的全限定名
+        name: 不具有唯一性，且没有id的属性值这样严格。但是获取bean实例的时候会被后面一个同name的bean实例覆盖，尽量不用该属性
+     -->
+    <bean id="person" class="com.zhashu.xmlBean.ordinaryBean.Person">
+        <constructor-arg name="userName" value="渣叔"/>
+        <constructor-arg name="address" value="杭州市滨江区" />
+    </bean>
+
+    <!-- 
+        下面两个BeanDefinition会在实例化的时候合并成一个，以下面的为准
+        abstract：是否设置为抽象类，若为true则不会被实例化。那么该bean可以进行扩展，扩展bean就可以使用parent属性
+        parent：当第一个Bean中的所有属性在第二个Bean（含parent属性）中都有对应的属性，那么这两个BeanDefinition会合并成一个，以第二个bean为主
+     -->
+    <bean id="parent" class="com.zhashu.xmlBean.mergeBean.Parent" abstract="true">
+        <property name="name" value="parentName" />
+    </bean>
+    <bean id="son" class="com.zhashu.xmlBean.mergeBean.Son" parent="parent">
+        <property name="age" value="12" />
+    </bean>
+
+    <!-- 
+       VideoOrder中的Video属性被注入
+       byName：必须和id的值一致
+       byType：只需和被注入的类型一致即可
+       constructor：通过VideoOrder中对Video属性的构造函数进行注入
+       
+       scope：作用域，默认为单例作用域singleton，其他还有原型作用域prototype、request作用域request、session作用域session等
+       autowire：指定自动装配模式，默认no不开启，其它还有通过bean的id注入的byName、通过类型注入的byType、通过构造函数注入的constructor
+       autowire-candidate：默认是true，如果设为false，则该bean无法进行依赖注入
+       primary：当有多个同名bean的时候，如果不设置primary为true则会报错，设置了primary为true，则会定向注入primary为true的bean
+     -->
+    <bean id="video" class="com.zhashu.xmlBean.autowireBean.Video" scope="singleton">
+        <property name="id" value="9" />
+        <property name="title" value="Spring5.X" />
+    </bean>
+    <bean id="video2" class="com.zhashu.xmlBean.autowireBean.Video" scope="singleton" primary="true">
+        <property name="id" value="10" />
+        <property name="title" value="Spring4.X" />
+    </bean>
+    <bean id="videoOrder" class="com.zhashu.xmlBean.autowireBean.VideoOrder" autowire="byType">
+        <property name="id" value="8" />
+        <property name="no" value="EG23AS3SFGBR3V34" />
+    </bean>
+
+    <!-- 
+        lazy-init：是否进行懒加载，该设置只对scope为singleton的bean起作用，设置为true的时候，在ApplicationContext启动的时候不会被提前实例化，
+        而是在第一次getBean操作的时候再进行的实例化。如果一个立即加载的bean1引用了一个懒加载的bean2，那么bean1会在容器启动的时候被加载，而bean2
+        被bean1引用了，因此也会被实例化
+     -->
+    <bean id="lazy" class="com.zhashu.xmlBean.lazyBean.LazyBean" lazy-init="true">
+        <property name="name" value="I am lazy-bean" />
+    </bean>
+    
+    <!-- 
+        程序把自己的工厂对象托付给Spring管理生成工厂Bean，然后利用工厂Bean来创建实例
+        1、静态工厂
+        2、实例工厂
+        3、实现了FactoryBean的工厂
+    -->
+    <bean id="staticApple" class="com.zhashu.xmlBean.factoryBean.StaticBeanFactory" factory-method="createApple" />
+    
+    <bean id="instanceBeanFactory" class="com.zhashu.xmlBean.factoryBean.InstanceBeanFactory">
+        <constructor-arg name="color" value="green" />
+    </bean>
+    <bean id="instanceApple" factory-bean="instanceBeanFactory" factory-method="createApple" />
+    
+    <bean id="myApple" class="com.zhashu.xmlBean.factoryBean.MyBeanFactory" />
+    
+    <!-- 
+        init-method：在创建完bean之后调用的无参方法
+        destory-method：在bean销毁后调用的方法，scope必须为singleton，如有参数，只能限定一个boolean类型的参数
+    -->
+    <bean id="initDestoryBean" class="com.zhashu.xmlBean.initDestoryBean.InitDestoryBean" init-method="init" destroy-method="destory" />
+    
+    <!-- dependsOn：bean1在实例化的过程中需要依赖bean2的初始化，那么会先初始化bean2，再初始化bean1，如果有多个依赖，则用逗号进行隔开 -->
+    <bean id="animal" class="com.zhashu.xmlBean.dependsOnBean.Animal" init-method="init" />
+    <bean id="creature" class="com.zhashu.xmlBean.dependsOnBean.Creature" init-method="init" />
+    <bean id="human" class="com.zhashu.xmlBean.dependsOnBean.Human" init-method="init" depends-on="animal,creature" />
+    
+</beans>

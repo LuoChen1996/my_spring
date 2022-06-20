@@ -1,0 +1,13 @@
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:schemaLocation="
+            http://www.springframework.org/schema/beans
+            http://www.springframework.org/schema/beans/spring-beans.xsd">
+    
+    <!-- bean标签的基础用法 -->
+    <import resource="spring-basic.xml" />
+    
+    <!-- spring对BeanPostProcessor的扩展 -->
+    <import resource="spring-postProcessor.xml" />
+    
+</beans>
