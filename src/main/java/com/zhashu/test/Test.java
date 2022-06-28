@@ -1,5 +1,6 @@
 package com.zhashu.test;
 
+import com.zhashu.factoryBean.MyFactoryBean;
 import com.zhashu.service.UserService;
 import com.zhashu.xmlBean.autowireBean.VideoOrder;
 import com.zhashu.xmlBean.factoryBean.Apple;
@@ -69,5 +70,13 @@ public class Test {
         UserService userService = (UserService) applicationContext.getBean("userServiceImpl");
         userService.test();
     }
-    
+
+    @org.junit.Test
+    public void test5() {
+        AnnotationConfigApplicationContext applicationContext = new AnnotationConfigApplicationContext("com.zhashu");
+        Object object = applicationContext.getBean("myFactoryBean");
+        System.out.println(object.getClass());
+        Object object2 = applicationContext.getBean("&myFactoryBean");
+        System.out.println(object2.getClass());
+    }
 }

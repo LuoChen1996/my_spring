@@ -47,10 +47,6 @@
         <property name="id" value="10" />
         <property name="title" value="Spring4.X" />
     </bean>
-    <bean id="videoOrder" class="com.zhashu.xmlBean.autowireBean.VideoOrder" autowire="byType">
-        <property name="id" value="8" />
-        <property name="no" value="EG23AS3SFGBR3V34" />
-    </bean>
 
     <!-- 
         lazy-init：是否进行懒加载，该设置只对scope为singleton的bean起作用，设置为true的时候，在ApplicationContext启动的时候不会被提前实例化，
