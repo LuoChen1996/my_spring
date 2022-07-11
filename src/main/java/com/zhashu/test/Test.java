@@ -79,4 +79,9 @@ public class Test {
         Object object2 = applicationContext.getBean("&myFactoryBean");
         System.out.println(object2.getClass());
     }
+
+    @org.junit.Test
+    public void test6() {
+        AnnotationConfigApplicationContext applicationContext = new AnnotationConfigApplicationContext("com.zhashu.circleBean");
+    }
 }
